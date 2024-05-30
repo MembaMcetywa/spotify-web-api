@@ -108,11 +108,16 @@ const searchPlaylist = async () => {
   }
 };
 
+// ...
+
+// Call this function when the user triggers the search
 const handlePlaylistSearch = (e: any) => {
   e.preventDefault()
   searchPlaylist();
 };
 
+
+  // New function to handle search button click
   const handleSearch = (e: any) => {
     e.preventDefault()
     searchArtists();
@@ -123,6 +128,7 @@ const handlePlaylistSearch = (e: any) => {
     window.localStorage.removeItem("token");
   };
 
+  // New function to render artists
   const renderArtists = () => {
     return artists.map(artist => (
       <div key={artist.id}>
@@ -136,9 +142,9 @@ const handlePlaylistSearch = (e: any) => {
     <>
       {!token ? (
         <header className='app-header'>
-          <h2>The Experimental <span className='highlight'>LOOP</span>.</h2>
-          <a className='login-button' href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
-            Login via Spotify
+          <h2>This is an experiment!</h2>
+          <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
+            Login to Spotify
           </a>
         </header>
       ) : (
