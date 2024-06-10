@@ -1,161 +1,44 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './components/home';
+import Login from './components/login';
+import Callback from './components/callback';
 
-
-type Artist = {
-  id: string;
-  images: { url: string }[];
-  name: string;
-};
-
-function App() {
-  const CLIENT_ID = "d85c65cf3b4343998d57519ca409c40c";
-  const REDIRECT_URI = "http://localhost:5173/callback";
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const RESPONSE_TYPE = "token";
-  const PLAYLIST_ID = "0CE4npGyTskQQ11nRdlogc";
-
-  const [token, setToken] = useState<string | null>("");
-  const [searchKey, setSearchKey] = useState("");
-  const [artists, setArtists] = useState<Artist[]>([]);
+const App: React.FC = () => {
+  const [token, setToken] = useState<string>('');
+  const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+  const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT;
+  const RESPONSE_TYPE = import.meta.env.VITE_RESPONSE_TYPE;
+  const PLAYLIST_ID =import.meta.env.RESPONSE_TYPE;
 
   useEffect(() => {
     const hash = window.location.hash;
-    if (hash) {
-      const tokenParam = hash.substring(1)?.split("&").find(elem => elem.startsWith("access_token"));
-      const token = tokenParam ? tokenParam.split("=")[1] : null;
-      if (token) {
-        window.localStorage.setItem("token", token);
-        setToken(token);
-        window.location.hash = "";
-      }
-    }
-  }, []);
-
-  const setAccessToken = () => {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
-    if (!token && hash) {
-      const tokenParam = hash.substring(1)?.split("&").find(elem => elem.startsWith("access_token"));
-      token = tokenParam ? tokenParam.split("=")[1] : null;
+    let newToken = window.localStorage.getItem('token');
+    if (!newToken && hash) {
+      const tokenParam = hash.substring(1).split("&").find(elem => elem.startsWith("access_token"));
+      newToken = tokenParam ? tokenParam.split("=")[1] : null;
       window.location.hash = "";
-      if (token) {
-        window.localStorage.setItem("token", token);
+      if (newToken) {
+        window.localStorage.setItem("token", newToken);
       }
     }
-    setToken(token || '');
-  };
-
-  const searchArtists = async () => {
-    if (!token) {
-      setAccessToken();
-    }
-    if (token) {
-      try {
-        const { data } = await axios.get("https://api.spotify.com/v1/search", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          params: {
-            q: searchKey,
-            type: "artist"
-          }
-        });
-        setArtists(data.artists.items);
-      } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          console.error("Unauthorized. Please log in again.");
-          window.localStorage.removeItem("token");
-        } else {
-          console.error("Error occurred:", error.message);
-        }
-      }
-    }
-  };
-
-const searchPlaylist = async () => {
-  if (!token) {
-    setAccessToken();
-  }
-
-  if (token) {
-    try {
-
-      const { data: playlist } = await axios.get(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      // Fetch tracks in the playlist
-      const { data: { items: tracks } } = await axios.get(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      console.log("Playlist:", playlist);
-      console.log("Tracks:", tracks);
-    } catch (error: any) {
-      if (error.response && error.response.status === 401) {
-        console.error("Unauthorized. Please log in again.");
-        window.localStorage.removeItem("token");
-      } else {
-        console.error("Error occurred:", error.message);
-      }
-    }
-  }
-};
-
-const handlePlaylistSearch = (e: any) => {
-  e.preventDefault()
-  searchPlaylist();
-};
-
-  const handleSearch = (e: any) => {
-    e.preventDefault()
-    searchArtists();
-  };
-
-  const logout = () => {
-    setToken("");
-    window.localStorage.removeItem("token");
-  };
-
-  const renderArtists = () => {
-    return artists.map(artist => (
-      <div key={artist.id}>
-        {artist.images.length ? <img width={"100%"} src={artist.images[0].url} alt="" /> : <div>No Image</div>}
-        {artist.name}
-      </div>
-    ));
-  };
+    setToken(newToken || '');
+  }, [token]);
 
   return (
-    <>
-      {!token ? (
-        <header className='app-header'>
-          <h2>The Experimental <span className='highlight'>LOOP</span>.</h2>
-          <a className='login-button' href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
-            Login via Spotify
-          </a>
-        </header>
-      ) : (
-        <>
-          <section className='body'>
-            <form onSubmit={handleSearch} className='form'>
-              <input type="text" onChange={e => setSearchKey(e.target.value)} />
-              <button type="submit">Search</button>
-            </form>
-            <button onClick={logout}>Logout</button>
-          </section>
-          <button type="submit" onClick={handlePlaylistSearch}>Search Playlist</button>
-          {renderArtists()}
-        </>
-      )}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={token ? <Home token={token} setToken={setToken} /> : <Login 
+          authEndpoint={AUTH_ENDPOINT}
+          clientId={CLIENT_ID}
+          redirectUri={REDIRECT_URI}
+          responseType={RESPONSE_TYPE}
+        />} />
+       <Route path="/callback" element={<Callback setToken={setToken} />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
