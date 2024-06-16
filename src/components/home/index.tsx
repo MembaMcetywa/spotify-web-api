@@ -1,16 +1,18 @@
+import React, { FC } from 'react';
+import Sidebar from '../sidebar';
 
-import React, { FC, useState } from 'react';
-import Search from '../search';
-import { Artist, HomeProps } from '../../models';
-
-
-const Home: FC<HomeProps> = ({ token, setToken }) => {
-  const [artists, setArtists] = useState<Artist[]>([]);
-
-  return (
-    <Search token={token} setArtists={setArtists} />
-  );
+interface HomeProps {
+  token: string | null;
+  playlistId: string;
+  setToken: (token: string | null) => void;  
 }
 
+const Home: FC<HomeProps> = ({ token, setToken, playlistId }) => {
+  return (
+    <div className="home-layout">
+      <Sidebar token={token} playlistId={playlistId} />
+    </div>
+  );
+}
 
 export default Home;
