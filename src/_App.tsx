@@ -9,7 +9,7 @@ type Artist = {
   name: string;
 };
 
-function App() {
+function TestApp() {
   const CLIENT_ID = "d85c65cf3b4343998d57519ca409c40c";
   const REDIRECT_URI = "http://localhost:5173/callback";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
@@ -164,4 +164,4 @@ const handlePlaylistSearch = (e: any) => {
   );
 }
 
-export default App;
+export default TestApp;

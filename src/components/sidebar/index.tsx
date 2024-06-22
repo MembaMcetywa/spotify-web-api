@@ -9,7 +9,7 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = ({ token, playlistId }) => {
 
   return (
-    <div className="sidebar" style={{ width: '300px', backgroundColor: '#f8f9fa', padding: '20px', height: '100vh', boxSizing: 'border-box', overflowY: 'auto' }}>
+    <div className="sidebar">
       <Playlist token={token} playlistId={playlistId} />
     </div>
   );

@@ -30,6 +30,7 @@ const Search: FC<SearchProps> = ({ allTracks, setFilteredTracks }) => {
   return (
     <div className="search-component">
       <input
+      className='search-component-input'
         type="text"
         value={searchKey}
         placeholder="Search Numbers & Tracks"
