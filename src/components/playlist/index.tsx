@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import Search from '../search';
-import { Track } from '../../models';
+import Track from '../track';
+import { Track as TrackModel } from '../../models';
 
 interface PlaylistProps {
   token: string | null;
@@ -9,8 +10,8 @@ interface PlaylistProps {
 }
 
 const Playlist: FC<PlaylistProps> = ({ token, playlistId }) => {
-  const [allTracks, setAllTracks] = useState<Track[]>([]);
-  const [filteredTracks, setFilteredTracks] = useState<Track[]>([]);
+  const [allTracks, setAllTracks] = useState<TrackModel[]>([]);
+  const [filteredTracks, setFilteredTracks] = useState<TrackModel[]>([]);
 
   const PLAYLIST_ID =import.meta.env.PLAYLIST_ID;
   const fetchPlaylistTracks = async () => {
@@ -34,20 +35,12 @@ const Playlist: FC<PlaylistProps> = ({ token, playlistId }) => {
   }, [token]);
 
   return (
-    <div>
+    <>
       <Search allTracks={allTracks} setFilteredTracks={setFilteredTracks} />
       <div className="playlist">
-        {filteredTracks.map(track => (
-          <div key={track.id} className="track">
-            <img src={track.album.images[0].url} alt={track.name} style={{ width: 50, height: 50 }} />
-            <div>
-              <div>{track.name}</div>
-              <div>{track.artists.map(artist => artist.name).join(', ')}</div>
-            </div>
-          </div>
-        ))}
+      {filteredTracks.map(track => <Track key={track.id} track={track} />)}
       </div>
-    </div>
+    </>
   );
 };
 

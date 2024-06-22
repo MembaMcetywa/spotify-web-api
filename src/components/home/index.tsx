@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import Sidebar from '../sidebar';
+import HeaderComponent from '../header';
 
 interface HomeProps {
   token: string | null;
@@ -10,6 +11,7 @@ interface HomeProps {
 const Home: FC<HomeProps> = ({ token, setToken, playlistId }) => {
   return (
     <div className="home-layout">
+      <HeaderComponent />
       <Sidebar token={token} playlistId={playlistId} />
     </div>
   );
