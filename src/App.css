@@ -1,8 +1,13 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
   text-align: center;
+  background-color: #242424;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
 }
 
 .card {
@@ -20,10 +25,82 @@
 }
 
 .app-header {
-  min-height: 15rem;
   display: flex;
-  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  width: 100%;;
+  
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 90vh;
+  width: 32rem;
+  border: solid red;
+  box-sizing: border-box;
+  overflow-x: hidden;
   padding: 1rem;
+
+}
+
+.search-component {
+  width: 100%;
+  position: sticky;
+}
+
+.search-component .search-component-input {
+  width: 100%;
+}
+
+.track {
+  border: 1px solid blue;
+  height: 6rem;
+}
+
+.track-info {
+  display: flex;
+  width: 70%;
+  height: 100%;
+  padding: 1rem;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid yellow;
+}
+
+.track-info .track-cover {
+  height: 100%;
+}
+
+.track-info .track-name {
+  border: 1px solid blue;
+  width: 100%;
+  text-align: left;
+  text-wrap: nowrap ;
+}
+
+.playlist {
+  border: 2px solid yellow;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  
+}
+
+::-webkit-scrollbar {
+  width: 0.1rem;
+  background-color: inherit;
+}
+
+
+.login { 
+min-height: 15rem;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+padding: 1rem;
 }

@@ -1,16 +1,18 @@
-import React from "react";
+import React, { FC } from "react";
 
-const DashboardPlayer = () => {
+const HeaderComponent: FC = () => {
   return (
-    <body style={{margin: "0 1.5rem"}}>
+    <header style={{ border: '3px solid green'}}>
       <section>
-        <header className="header" style={{display: "flex", justifyContent: "space-between", width: "100%", backgroundColor: "yellow" }}>
-          <div className="hero" style={{backgroundColor: "blue", width: "250px"}}></div>
-          <div className="banner" style={{backgroundColor: "red", width: "500px"}}></div>
+        <div className="row">
+        <header className="app-header col-12">
+          <div className="home-loop" style={{ width: "250px"}}><span className="highlight">Loop</span>.</div>
+          <div className="logout" style={{backgroundColor: "red", width: "500px"}}>Logout</div>
         </header>
+        </div>
       </section>
-    </body>
+    </header>
   );
 };
 
-export default DashboardPlayer;
+export default HeaderComponent;
