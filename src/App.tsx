@@ -3,14 +3,16 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/home';
 import Login from './components/login';
 import Callback from './components/callback';
+import './App.css'
+
 
 const App: React.FC = () => {
-  const [token, setToken] = useState<string>('');
+  const [token, setToken] = useState<string | null>('');
   const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
   const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
   const AUTH_ENDPOINT = import.meta.env.VITE_AUTH_ENDPOINT;
   const RESPONSE_TYPE = import.meta.env.VITE_RESPONSE_TYPE;
-  const PLAYLIST_ID =import.meta.env.RESPONSE_TYPE;
+  const PLAYLIST_ID =import.meta.env.VITE_PLAYLIST_ID;
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -23,13 +25,16 @@ const App: React.FC = () => {
         window.localStorage.setItem("token", newToken);
       }
     }
-    setToken(newToken || '');
-  }, [token]);
+    else {
+      setToken(newToken || '');
+    }
+    window.location.hash = '';
+  }, []);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={token ? <Home token={token} setToken={setToken} /> : <Login 
+        <Route path="/" element={token ? <Home token={token} setToken={setToken} playlistId={PLAYLIST_ID} /> : <Login 
           authEndpoint={AUTH_ENDPOINT}
           clientId={CLIENT_ID}
           redirectUri={REDIRECT_URI}

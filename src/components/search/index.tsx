@@ -1,44 +1,43 @@
-import React, {FC,  useState, useEffect } from 'react';
-import axios from 'axios';
-import { Artist } from '../../models';
+import React, { FC, useState, useEffect } from 'react';
+import { debounce } from 'lodash';
+import { Track } from '../../models';
 
 interface SearchProps {
-  token: string | null;
-  setArtists: (artists: Artist[]) => void;
+  allTracks: Track[];
+  setFilteredTracks: (tracks: Track[]) => void;
 }
 
-const Search: FC<SearchProps> = ({ token, setArtists }) => {
+const Search: FC<SearchProps> = ({ allTracks, setFilteredTracks }) => {
   const [searchKey, setSearchKey] = useState<string>('');
 
-  const searchArtists = async () => {
-    if (token && searchKey) {
-      try {
-        const { data } = await axios.get("https://api.spotify.com/v1/search", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          params: {
-            q: searchKey,
-            type: "artist"
-          }
-        });
-        setArtists(data.artists.items);
-      } catch (error: any) {
-        console.error("Error occurred:", error.message);
-      }
-    }
-  };
-
   useEffect(() => {
-    // If there's a need to auto-search or debounce, handle that here
-  }, [token, searchKey]); // Dependent on token and searchKey to re-run
+    const debouncedFilter = debounce(() => {
+      const filteredTracks = allTracks.filter(track =>
+        track.name.toLowerCase().includes(searchKey.toLowerCase()) //TODO: search track by artist name 
+      );
+      setFilteredTracks(filteredTracks);
+    }, 300);
+
+    if (searchKey === '') {
+      setFilteredTracks(allTracks);
+    } else {
+      debouncedFilter();
+    }
+
+    return () => debouncedFilter.cancel();
+  }, [searchKey, allTracks]);
 
   return (
-    <form onSubmit={e => e.preventDefault()} className='form'>
-      <input type="text" value={searchKey} onChange={e => setSearchKey(e.target.value)} />
-      <button type="submit" onClick={searchArtists}>Search</button>
-    </form>
+    <div className="search-component">
+      <input
+      className='search-component-input'
+        type="text"
+        value={searchKey}
+        placeholder="Search Numbers & Tracks"
+        onChange={(e) => setSearchKey(e.target.value)}
+      />
+    </div>
   );
-}
+};
 
 export default Search;
