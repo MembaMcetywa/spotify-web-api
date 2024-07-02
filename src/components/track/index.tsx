@@ -18,7 +18,7 @@ const Track: FC<TrackProps> = ({ track }) => {
       </div>
       </div>
       <div className='track-actions'>
-      <IoIosPlayCircle />
+      <IoIosPlayCircle color='#1DB954' size={40} />
       </div>
     </div>
   );
