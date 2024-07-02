@@ -1,13 +1,14 @@
-import React, { FC } from 'react'
+import React, { type FC } from 'react'
 import { IoIosPlayCircle } from "react-icons/io";
-import { Track as TrackModel } from '../../models';
+import type { Track as TrackModel } from '../../models';
 
 
 interface TrackProps {
   track: TrackModel;
+  onPlay: () => void;
 }
 
-const Track: FC<TrackProps> = ({ track }) => {
+const Track: FC<TrackProps> = ({ track, onPlay }) => {
   return (
     <div key={track.id} className="track">
       <div className='track-info'>
@@ -18,7 +19,7 @@ const Track: FC<TrackProps> = ({ track }) => {
       </div>
       </div>
       <div className='track-actions'>
-      <IoIosPlayCircle color='#1DB954' size={40} />
+      <IoIosPlayCircle  size={40} style={{cursor: 'pointer'}} onClick={onPlay} />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Sidebar from '../sidebar';
 import HeaderComponent from '../header';
+import PlayerComponent from '../player';
+import { Track } from '../../models';
 
 interface HomeProps {
   token: string | null;
@@ -9,11 +11,15 @@ interface HomeProps {
 }
 
 const Home: FC<HomeProps> = ({ token, setToken, playlistId }) => {
+  const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
   return (
-    <div className="home-layout">
+    <>
       <HeaderComponent />
-      <Sidebar token={token} playlistId={playlistId} />
-    </div>
+      <div className='home-layout'>
+      <Sidebar token={token} playlistId={playlistId} onPlay={setCurrentTrack} />
+      <PlayerComponent track={currentTrack} />
+      </div>
+    </>
   );
 }
 
