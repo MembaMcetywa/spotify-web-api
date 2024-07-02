@@ -31,7 +31,6 @@ const Playlist: FC<PlaylistProps> = ({ token, playlistId }) => {
   };
   useEffect(() => {
     fetchPlaylistTracks();
-    console.log('i ran up to here')
   }, [token]);
 
   return (
