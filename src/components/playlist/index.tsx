@@ -7,9 +7,10 @@ import { Track as TrackModel } from '../../models';
 interface PlaylistProps {
   token: string | null;
   playlistId: string;
+  onPlay: (track: TrackModel) => void;
 }
 
-const Playlist: FC<PlaylistProps> = ({ token, playlistId }) => {
+const Playlist: FC<PlaylistProps> = ({ token, playlistId, onPlay }) => {
   const [allTracks, setAllTracks] = useState<TrackModel[]>([]);
   const [filteredTracks, setFilteredTracks] = useState<TrackModel[]>([]);
 
@@ -31,14 +32,13 @@ const Playlist: FC<PlaylistProps> = ({ token, playlistId }) => {
   };
   useEffect(() => {
     fetchPlaylistTracks();
-    console.log('i ran up to here')
   }, [token]);
 
   return (
     <>
       <Search allTracks={allTracks} setFilteredTracks={setFilteredTracks} />
-      <div className="playlist">
-      {filteredTracks.map(track => <Track key={track.id} track={track} />)}
+      <div className='playlist'>
+      {filteredTracks.map(track => <Track key={track.id} track={track} onPlay={() => onPlay(track)} />)}
       </div>
     </>
   );
