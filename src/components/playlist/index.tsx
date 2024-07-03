@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import axios from 'axios';
 import Search from '../search';
 import Track from '../track';
-import { Track as TrackModel } from '../../models';
+import type { Track as TrackModel } from '../../models';
 
 interface PlaylistProps {
   token: string | null;
@@ -21,8 +21,7 @@ const Playlist: FC<PlaylistProps> = ({ token, playlistId, onPlay }) => {
         const { data } = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        const fetchedTracks = data.items.map((item: any) => item.track);
-        console.log(fetchedTracks)
+        const fetchedTracks = data.items.map((item: TrackModel) => item.track);
         setAllTracks(fetchedTracks);
         setFilteredTracks(fetchedTracks);
       } catch (error) {
@@ -30,6 +29,7 @@ const Playlist: FC<PlaylistProps> = ({ token, playlistId, onPlay }) => {
       }
     }
   };
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     fetchPlaylistTracks();
   }, [token]);

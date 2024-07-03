@@ -94,9 +94,6 @@ const searchPlaylist = async () => {
           Authorization: `Bearer ${token}`
         }
       });
-
-      console.log("Playlist:", playlist);
-      console.log("Tracks:", tracks);
     } catch (error: any) {
       if (error.response && error.response.status === 401) {
         console.error("Unauthorized. Please log in again.");

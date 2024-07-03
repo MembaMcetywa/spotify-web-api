@@ -1,5 +1,6 @@
 import React, { type FC } from 'react'
-import { IoIosPlayCircle } from "react-icons/io";
+import { FaCirclePlay } from 'react-icons/fa6';
+
 import type { Track as TrackModel } from '../../models';
 
 
@@ -19,7 +20,7 @@ const Track: FC<TrackProps> = ({ track, onPlay }) => {
       </div>
       </div>
       <div className='track-actions'>
-      <IoIosPlayCircle  size={40} style={{cursor: 'pointer'}} onClick={onPlay} />
+      <FaCirclePlay  size={35} style={{cursor: 'pointer'}} onClick={onPlay} />
       </div>
     </div>
   );
