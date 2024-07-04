@@ -1,5 +1,4 @@
 import type React from 'react';
-import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/home';
 import Login from './components/login';
