@@ -59,11 +59,11 @@
 
 .track {
   display: flex;
+  background-color: rgba(0,0,0,0.5);
   border: 2px solid green;
   height: 6rem;
   border-radius: 0.25rem;
   transition: border 0.3s ease-in-out;
-
 }
 
 .track:hover {
@@ -140,8 +140,15 @@
   box-sizing: border-box;
   overflow-x: hidden;
   padding: 1rem 1rem 0 1rem;
- 
+}
 
+.no-track-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 90vh;
+  font-weight: bold;
 }
 
 .current-track {
