@@ -1,12 +1,12 @@
-import React, { useEffect, useState, type FC } from "react";
+import React, { useCallback, useEffect, useState, type FC } from "react";
 import type { Track as TrackModel } from "../../models";
 import { MdSkipPrevious, MdSkipNext } from "react-icons/md";
-import { IoIosPlayCircle } from "react-icons/io";
 import { FaCirclePause } from "react-icons/fa6";
-import { FaVolumeLow } from "react-icons/fa6";
-import { FaCirclePlay } from 'react-icons/fa6';
+import { FaVolumeXmark, FaVolumeHigh } from "react-icons/fa6";
+import { FaCirclePlay } from "react-icons/fa6";
 import * as Slider from "@radix-ui/react-slider";
 import axios from "axios";
+import { debounce } from 'lodash';
 
 interface PlayerProps {
 	track: TrackModel | null;
@@ -17,6 +17,7 @@ const PlayerComponent: FC<PlayerProps> = ({ track, token }) => {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const [playbackInfo, setPlaybackInfo] = useState<any>(null);
 	const [isPlaying, setIsPlaying] = useState<boolean>(false);
+	const [volume, setVolume] = useState<number>(50);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -28,10 +29,10 @@ const PlayerComponent: FC<PlayerProps> = ({ track, token }) => {
 						headers: { Authorization: `Bearer ${token}` },
 					},
 				);
-				setPlaybackInfo(response.data); // Store the playback data in state
+				setPlaybackInfo(response.data);
 			} catch (error) {
 				console.error("Error fetching playback status:", error);
-				setPlaybackInfo(null); // Handle error or case when data is not available
+				setPlaybackInfo(null);
 			}
 		};
 		fetchPlaybackStatus();
@@ -55,39 +56,46 @@ const PlayerComponent: FC<PlayerProps> = ({ track, token }) => {
 					"Content-Type": "application/json",
 				},
 			});
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		} catch (error: any) {
 			console.error("Error starting playback:", error);
-      if(error.message === 'Request failed with status code 404') {
-        window.alert('Play something on your Spotify app then try again :)')
-      }
+			if (error.message === "Request failed with status code 404") {
+				window.alert("Play something on your Spotify app then try again :)");
+			}
 		}
 	};
-	if (!track) {
-		return (
-			<div
-      className='no-track-container'
-			>
-				No track selected
-			</div>
-		);
-	}
 
-	console.log("playyback info", playbackInfo);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const setSpotifyVolume = useCallback(debounce((volume: number) => {
+        if (!token) return;
+        const endpoint = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volume}`;
+        axios.put(endpoint, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        }).catch(error => {
+            console.error('Error setting volume:', error);
+        });
+    }, 500), [token]); 
+
+	const handleVolumeChange = (value: number[]) => {
+        const newVolume = value[0];
+        setVolume(newVolume);
+        setSpotifyVolume(newVolume);
+    };
+
+	useEffect(() => {
+		console.log('volume', volume)
+	}, [volume])
+
 	return (
 		<>
 			{!track ? (
 				<div
-					style={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-						width: "60%",
-						height: "90vh",
-						fontWeight: "bold",
-					}}
+				className='no-track-container'
 				>
-					No track selected
+				No track selected
 				</div>
 			) : (
 				<div className="container">
@@ -127,10 +135,15 @@ const PlayerComponent: FC<PlayerProps> = ({ track, token }) => {
 								<MdSkipNext size={40} style={{ cursor: "pointer" }} />
 							</div>
 							<div className="volume">
-								<FaVolumeLow size={20} />
+								{volume > 0 ? (
+									<FaVolumeHigh size={20} />
+								) : (
+									<FaVolumeXmark size={20} />
+								)}
 								<Slider.Root
 									className="SliderRoot"
-									defaultValue={[50]}
+									defaultValue={[volume]}
+									onValueChange={handleVolumeChange} 
 									max={100}
 									step={1}
 								>

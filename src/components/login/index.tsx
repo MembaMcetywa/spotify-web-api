@@ -8,9 +8,9 @@ const Login: React.FC<LoginProps> = ({ authEndpoint, clientId, redirectUri, resp
     'user-read-email',
     'playlist-read-private',
     'playlist-read-collaborative',
-    'user-modify-playback-state', // allows controlling playback
-    'user-read-playback-state',   // allows playback state
-    'user-read-currently-playing' // allows reading the current playing track
+    'user-modify-playback-state',
+    'user-read-playback-state',
+    'user-read-currently-playing'
   ].join(' ');
 
   return (

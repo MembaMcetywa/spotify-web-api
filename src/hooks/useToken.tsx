@@ -28,7 +28,7 @@ const useToken = () => {
   };
 
   const saveToken = (newToken: string, expiresIn: number) => {
-    const expiryTime = new Date().getTime() + expiresIn * 1000; // Convert expiresIn to milliseconds
+    const expiryTime = new Date().getTime() + expiresIn * 1000;
     localStorage.setItem('token', newToken);
     localStorage.setItem('token_expiry', expiryTime.toString());
     setToken(newToken);
